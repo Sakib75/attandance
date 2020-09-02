@@ -69,6 +69,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           itemCount: _all_class_data.length,
                           itemBuilder: (context, index) {
                             int _id = _all_class_data[index]['_id'];
+                            int _goal = _all_class_data[index]['goal'];
                             int _total = _all_class_data[index]['total'];
                             int _present = _all_class_data[index]['present'];
                             String _name = _all_class_data[index]['name'];
@@ -89,14 +90,13 @@ class _MyHomePageState extends State<MyHomePage> {
                                 present: _present,
                                 name: _name,
                                 routine: _routine,
+                                goal: _goal,
                                 histories: _histories);
                             bool isToday = false;
 
                             String today = check_date();
-                            print(_sub.routine.runtimeType);
+
                             _sub.routine.forEach((element) {
-                              print(element);
-                              print(today);
                               element = element.replaceAll(" ", "");
                               if (element == today) {
                                 isToday = true;
@@ -146,12 +146,11 @@ class _MyHomePageState extends State<MyHomePage> {
                             // print(history.sublist(len - 5, len));
 
                             // ADD Goal stats to database
-                            double goal = 60.00;
+                            double goal = _sub.goal.toDouble();
                             String remarks =
                                 Remarks(goal, _sub.total, _sub.present);
 
                             return Subject_card(
-                                goal: goal,
                                 size: size,
                                 isToday: isToday,
                                 percentage: percentage,

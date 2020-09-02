@@ -12,7 +12,6 @@ import '../../helper/add_history.dart';
 class Subject_card extends StatelessWidget {
   const Subject_card({
     Key key,
-    @required this.goal,
     @required this.size,
     @required this.isToday,
     @required this.percentage,
@@ -22,7 +21,7 @@ class Subject_card extends StatelessWidget {
     @required this.last_5_classes,
   })  : _sub = sub,
         super(key: key);
-  final double goal;
+
   final Size size;
   final bool isToday;
   final double percentage;
@@ -35,6 +34,9 @@ class Subject_card extends StatelessWidget {
   Widget build(BuildContext context) {
     final dbHelper = DatabaseHelper.instance;
     bool status = false;
+    int goal = _sub.goal;
+    print("goal");
+    print(goal);
 
     // void _query() async {
     //   final allRows = await dbHelper.queryAllRows();
@@ -59,7 +61,7 @@ class Subject_card extends StatelessWidget {
 
     // ignore: non_constant_identifier_names
     check_status() {
-      if (percentage > goal) {
+      if (percentage >= goal) {
         status = true;
       } else {
         status = false;

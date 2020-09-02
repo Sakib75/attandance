@@ -29,17 +29,52 @@ class _EditState extends State<Edit> {
   TextEditingController _present;
   TextEditingController _total;
   String _title_string;
-  String present_string = '0';
-  String total_string = '0';
+  String present_string;
+  String total_string;
+  int _goal;
+  List<bool> _routine;
 
   bool detect = false;
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    setState(() {
+      _goal = widget._sub.goal;
+      print(_goal);
+      print(widget._sub.routine.runtimeType);
+
+      widget._sub.routine.forEach((element) {
+        print(element);
+        if (element == 'Saturday') {
+          isSat = true;
+        } else if (element == 'Sunday') {
+          isSun = true;
+        } else if (element == 'Monday') {
+          isMon = true;
+        } else if (element == 'Tuesday') {
+          isTue = true;
+        } else if (element == 'Wednesday') {
+          isWed = true;
+        } else if (element == 'Thursday') {
+          isThu = true;
+        } else if (element == 'Friday') {
+          isFri = true;
+        }
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    int _new_goal;
+
     List<String> routine = widget._sub.routine;
     Size size = MediaQuery.of(context).size;
-    List<bool> _routine = [isSat, isSun, isMon, isTue, isWed, isThu, isFri];
+    _routine = [isSat, isSun, isMon, isTue, isWed, isThu, isFri];
+    print(_routine);
     List<String> final_routine = [];
     if (_routine[0]) {
       final_routine.add('Saturday');
@@ -61,6 +96,11 @@ class _EditState extends State<Edit> {
     }
     if (_routine[6]) {
       final_routine.add('Friday');
+    }
+    void _delete(id) async {
+      final rowsDeleted = await dbHelper.delete(id);
+      print('deleted $rowsDeleted row(s): row $id');
+      Provider.of<SubjectData>(context, listen: false).Get_from_database();
     }
 
     void _update(row) async {
@@ -91,10 +131,6 @@ class _EditState extends State<Edit> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Previous title : ${widget._sub.name}',
-                            style: TextStyle(fontSize: 10, color: Colors.red),
-                          ),
-                          Text(
                             'New Title',
                             style: TextStyle(fontSize: 10),
                           ),
@@ -107,6 +143,7 @@ class _EditState extends State<Edit> {
                             controller: _title,
                             textAlign: TextAlign.center,
                             decoration: InputDecoration(
+                              hintText: widget._sub.name,
                               enabledBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(color: Colors.grey),
                               ),
@@ -122,20 +159,6 @@ class _EditState extends State<Edit> {
                               children: [
                                 SizedBox(
                                   height: 30,
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                        'Privous present : ${widget._sub.present}',
-                                        style: TextStyle(
-                                            fontSize: 10, color: Colors.red)),
-                                    Text(
-                                        'Privous present : ${widget._sub.present}',
-                                        style: TextStyle(
-                                            fontSize: 10, color: Colors.red)),
-                                  ],
                                 ),
                                 Row(
                                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -155,7 +178,8 @@ class _EditState extends State<Edit> {
                                       keyboardType: TextInputType.number,
                                       textAlign: TextAlign.center,
                                       decoration: InputDecoration(
-                                        hintText: '0',
+                                        hintText:
+                                            widget._sub.present.toString(),
                                         enabledBorder: UnderlineInputBorder(
                                           borderSide:
                                               BorderSide(color: Colors.grey),
@@ -180,7 +204,7 @@ class _EditState extends State<Edit> {
                                       },
                                       textAlign: TextAlign.center,
                                       decoration: InputDecoration(
-                                        hintText: '0',
+                                        hintText: widget._sub.total.toString(),
                                         enabledBorder: UnderlineInputBorder(
                                           borderSide:
                                               BorderSide(color: Colors.grey),
@@ -195,6 +219,19 @@ class _EditState extends State<Edit> {
                                 ),
                               ],
                             ),
+                          ),
+                          Container(
+                            child: Text(_goal.toStringAsFixed(0)),
+                          ),
+                          Slider(
+                            min: 0,
+                            max: 100,
+                            value: _goal.toDouble(),
+                            onChanged: (value) {
+                              setState(() {
+                                _goal = value.ceil();
+                              });
+                            },
                           ),
                           Center(
                               child: GestureDetector(
@@ -338,29 +375,39 @@ class _EditState extends State<Edit> {
                           Center(
                               child: InkWell(
                                   onTap: () {
-                                    if (total_string == '') {
-                                      total_string = '0';
+                                    if (total_string == '' ||
+                                        total_string == null) {
+                                      total_string =
+                                          widget._sub.total.toString();
                                     }
                                     print(total_string);
-                                    if (present_string == '') {
-                                      present_string = '0';
+                                    if (present_string == '' ||
+                                        present_string == null) {
+                                      present_string =
+                                          widget._sub.present.toString();
                                     }
 
                                     String title = _title_string;
+
+                                    if (title == null) {
+                                      title = widget._sub.name;
+                                    }
                                     int total = int.parse(total_string);
                                     int present = int.parse(present_string);
+                                    int goal = _goal;
                                     String routine = final_routine
                                         .toString()
+                                        .replaceAll(" ", "")
                                         .replaceAll('[', '')
                                         .replaceAll(']', '');
                                     widget._sub.name = title;
                                     widget._sub.present = present;
                                     widget._sub.total = total;
                                     widget._sub.routine = final_routine;
-                                    print(total.runtimeType);
-                                    print(present.runtimeType);
-                                    print(routine.runtimeType);
-                                    print(title.runtimeType);
+                                    widget._sub.goal = goal;
+                                    print('routine');
+                                    print(final_routine);
+
                                     _update(widget._sub.toMap_update());
                                   },
                                   child: Container(
@@ -379,7 +426,7 @@ class _EditState extends State<Edit> {
                           Center(
                               child: InkWell(
                                   onTap: () {
-                                    _update(widget._sub.toMap_update());
+                                    _delete(widget._sub.id);
                                   },
                                   child: Container(
                                       width: double.infinity,

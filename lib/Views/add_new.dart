@@ -15,6 +15,7 @@ class _Add_subState extends State<Add_sub> {
   final dbHelper = DatabaseHelper.instance;
 
   double rating = 0;
+  int goal = 60;
   bool isSun = false;
   bool isMon = false;
   bool isTue = false;
@@ -315,6 +316,7 @@ class _Add_subState extends State<Add_sub> {
                                     String title = _title_string;
                                     int total = int.parse(total_string);
                                     int present = int.parse(present_string);
+                                    int goal = 60;
                                     String routine = final_routine
                                         .toString()
                                         .replaceAll('[', '')
@@ -323,7 +325,8 @@ class _Add_subState extends State<Add_sub> {
                                     print(present.runtimeType);
                                     print(routine.runtimeType);
                                     print(title.runtimeType);
-                                    _insert(title, present, total, routine);
+                                    _insert(
+                                        title, present, total, routine, goal);
                                   },
                                   child: Container(
                                       width: double.infinity,
@@ -347,13 +350,14 @@ class _Add_subState extends State<Add_sub> {
         ));
   }
 
-  void _insert(title, present, total, routine) async {
+  void _insert(title, present, total, routine, goal) async {
     // row to insert
     Map<String, dynamic> row = {
       DatabaseHelper.columnName: title,
       DatabaseHelper.columnHistories: 'X,X,X,X,X',
       DatabaseHelper.columnTotal: total,
       DatabaseHelper.columnRoutine: routine,
+      DatabaseHelper.columnGoal: goal,
       // DatabaseHelper.columnHistories:
       //     "N1598117377995,N1598117377995,N1598117377995,N1598117377995,N1598117377995,N1598117377995,N1598117377995,N1598117377995,N1598117377995,N1598117377995,N1598117377995,N1598117377995,N1598117377995,N1598117377995,N1598117377995,N1598117377995,N1598117377995,N1598117377995,N1598117377995,N1598117377995,N1598117377995,N1598117377995,N1598117377995,N1598117377995,N1598117377995,N1598117377995,N1598117377995,N1598117377995,N1598117377995,N1598117377995,N1598117377995,N1598117377995,N1598117377995,N1598117377995,N1598117377995,N1598117377995,N1598117377995,N1598117377995,N1598117377995,N1598117377995,N1598117377995,N1598117377995,N1598117377995,N1598117377995,N1598117377995,N1598117377995,N1598117377995,N1598117377995,N1598117377995,N1598117377995,N1598117377995,N1598117377995,N1598117377995,N1598117377995,N1598117377995,N1598117377995,N1598117377995,N1598117377995,N1598117377995,N1598117377995,N1598117377995,N1598117377995,N1598117377995,N1598117377995,N1598117377995,N1598117377995,N1598117377995,N1598117377995,N1598117377995,N1598117377995,N1598117377995,N1598117377995",
       DatabaseHelper.columnPresent: present,

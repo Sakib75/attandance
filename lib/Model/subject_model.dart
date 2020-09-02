@@ -9,6 +9,7 @@ class SubjectModel {
   int present;
   List<String> histories;
   List<String> routine;
+  int goal;
 
   SubjectModel(
       {this.id,
@@ -16,7 +17,8 @@ class SubjectModel {
       this.present,
       this.total,
       this.histories,
-      this.routine});
+      this.routine,
+      this.goal});
 
   Map<String, dynamic> toMap() {
     return {
@@ -24,7 +26,8 @@ class SubjectModel {
       DatabaseHelper.columnPresent: this.present,
       DatabaseHelper.columnTotal: this.total,
       DatabaseHelper.columnHistories: this.histories.toString(),
-      DatabaseHelper.columnRoutine: this.routine.toString()
+      DatabaseHelper.columnRoutine: this.routine.toString(),
+      DatabaseHelper.columnGoal: this.goal,
     };
   }
 
@@ -46,6 +49,7 @@ class SubjectModel {
           .replaceAll('[', '')
           .replaceAll(']', '')
           .replaceAll(' ', ''),
+      DatabaseHelper.columnGoal: this.goal,
     };
   }
 }

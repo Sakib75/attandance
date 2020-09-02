@@ -16,6 +16,7 @@ class DatabaseHelper {
   static final columnPresent = 'present';
   static final columnRoutine = 'routine';
   static final columnHistories = 'histories';
+  static final columnGoal = 'goal';
 
   // make this a singleton class
   DatabaseHelper._privateConstructor();
@@ -47,7 +48,8 @@ class DatabaseHelper {
             $columnTotal INTEGER NOT NULL,
             $columnPresent INTEGER NOT NULL,
             $columnRoutine TEXT,
-            $columnHistories TEXT
+            $columnHistories TEXT,
+            $columnGoal INTEGER
            
           )
           ''');
