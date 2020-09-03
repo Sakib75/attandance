@@ -88,6 +88,7 @@ class _Add_subState extends State<Add_sub> {
                                 _title_string = val;
                               });
                             },
+                            maxLength: 15,
                             controller: _title,
                             textAlign: TextAlign.center,
                             decoration: InputDecoration(

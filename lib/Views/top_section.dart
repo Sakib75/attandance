@@ -1,4 +1,5 @@
 import 'package:attandace_app/Views/add_new.dart';
+import 'package:attandace_app/Views/routine.dart';
 import 'package:attandace_app/Views/settings/settings.dart';
 import 'package:attandace_app/Views/stats.dart';
 import 'package:attandace_app/Views/utils/constants.dart';
@@ -93,13 +94,21 @@ class TopSec extends StatelessWidget {
                           ),
                         ),
                       ),
-                      Container(
-                        padding: EdgeInsets.all(5),
-                        decoration: button_decor,
-                        child: FaIcon(
-                          FontAwesomeIcons.calendarAlt,
-                          color: title_color,
-                          size: 15,
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Routine()));
+                        },
+                        child: Container(
+                          padding: EdgeInsets.all(5),
+                          decoration: button_decor,
+                          child: FaIcon(
+                            FontAwesomeIcons.calendarAlt,
+                            color: title_color,
+                            size: 15,
+                          ),
                         ),
                       ),
                       Container(

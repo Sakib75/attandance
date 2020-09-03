@@ -27,5 +27,5 @@ Color percentage_color = Color(0xff056404);
 Color edit_color = Color(0xff8ea1b9);
 Color present_color = Color(0xff93a1a6);
 Color total_color = Color(0xff98b2c8);
-Color title_color = Color(0xff677a94);
+Color title_color = Color(0xff3e4b65);
 Color thumbsup_color = Color(0xff7DA93E);

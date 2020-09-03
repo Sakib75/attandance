@@ -113,10 +113,14 @@ class Subject_card extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    _sub.name,
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold, color: title_color),
+                  Container(
+                    height: 30,
+                    width: 120,
+                    child: Text(
+                      _sub.name,
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, color: title_color),
+                    ),
                   ),
                   SizedBox(
                     width: 5,
