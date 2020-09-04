@@ -7,6 +7,7 @@ import 'package:attandace_app/helper/provider_subject.dart';
 import 'package:attandace_app/helper/remarks.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../helper/database_helper.dart';
 import '../Model/subject_model.dart';
@@ -26,6 +27,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final dbHelper = DatabaseHelper.instance;
   ScrollController _scrollController;
   double _val = 0;
+  bool isOpen = true;
 
   @override
   void initState() {
@@ -44,18 +46,19 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    isOpen = _val > size.height * 0.3 ? false : true;
     return Scaffold(
       backgroundColor: bg,
       body: Stack(
         children: [
           AnimatedPositioned(
-            top: size.height * 0.3 - _val,
-            duration: Duration(milliseconds: 200),
+            top: isOpen ? size.height * 0.3 : 0,
+            duration: Duration(milliseconds: 500),
             curve: Curves.linear,
             child: AnimatedContainer(
-              duration: Duration(milliseconds: 200),
-              curve: Curves.bounceInOut,
-              height: size.height * 0.7 + _val,
+              duration: Duration(milliseconds: 500),
+              curve: Curves.linear,
+              height: isOpen ? size.height * 0.7 : size.height,
               width: size.width,
               color: bg,
               child: Consumer<SubjectData>(
@@ -164,13 +167,17 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
           AnimatedPositioned(
-              curve: Curves.linear,
-              top: 0 - _val * 0.7,
+              curve: Curves.elasticInOut,
+              top: isOpen ? 0 : -size.height * 0.3,
               child: Container(
                 height: size.height * 0.3,
                 width: size.width,
                 decoration: BoxDecoration(
                     color: Color(0xff3e4b65),
+                    gradient: LinearGradient(colors: [
+                      Color(0xff3e4b65),
+                      Color(0xff3e4b65).withOpacity(0.5)
+                    ]),
                     boxShadow: [
                       BoxShadow(
                           color: Colors.black, spreadRadius: 3, blurRadius: 6)
@@ -181,7 +188,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     )),
                 child: TopSec(),
               ),
-              duration: Duration(milliseconds: 200)),
+              duration: Duration(milliseconds: 1000)),
         ],
       ),
     );

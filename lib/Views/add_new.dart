@@ -1,3 +1,4 @@
+import 'package:attandace_app/Views/home.dart';
 import 'package:attandace_app/Views/utils/constants.dart';
 import 'package:attandace_app/helper/database_helper.dart';
 import 'package:attandace_app/helper/provider_subject.dart';
@@ -5,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Add_sub extends StatefulWidget {
   @override
@@ -15,7 +17,7 @@ class _Add_subState extends State<Add_sub> {
   final dbHelper = DatabaseHelper.instance;
 
   double rating = 0;
-  int goal = 60;
+  int goal = 0;
   bool isSun = false;
   bool isMon = false;
   bool isTue = false;
@@ -29,10 +31,38 @@ class _Add_subState extends State<Add_sub> {
   String _title_string;
   String present_string = '0';
   String total_string = '0';
+  Color add_btn = Colors.black12;
+  int _goal;
 
   bool detect = false;
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getInt();
+    print(' goal : $_goal');
+  }
+
+  getInt() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    //Return int
+    int intValue = await prefs.getInt('goal');
+    setState(() {
+      goal = intValue;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    if (_title_string == '' || _title_string == null) {
+      setState(() {
+        add_btn = Colors.black12;
+      });
+    } else {
+      setState(() {
+        add_btn = title_color;
+      });
+    }
     List<bool> _routine = [isSat, isSun, isMon, isTue, isWed, isThu, isFri];
     List<String> final_routine = [];
     if (_routine[0]) {
@@ -56,6 +86,7 @@ class _Add_subState extends State<Add_sub> {
     if (_routine[6]) {
       final_routine.add('Friday');
     }
+    Size size = MediaQuery.of(context).size;
 
     return Scaffold(
         resizeToAvoidBottomInset: false,
@@ -71,7 +102,8 @@ class _Add_subState extends State<Add_sub> {
                 children: [
                   Text(
                     'Enter the details',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: kfont_large),
                   ),
                   Padding(
                       padding: EdgeInsets.symmetric(horizontal: 30),
@@ -80,7 +112,7 @@ class _Add_subState extends State<Add_sub> {
                         children: [
                           Text(
                             'Title',
-                            style: TextStyle(fontSize: 10),
+                            style: TextStyle(fontSize: kfont_mid),
                           ),
                           TextField(
                             onChanged: (val) {
@@ -88,6 +120,7 @@ class _Add_subState extends State<Add_sub> {
                                 _title_string = val;
                               });
                             },
+                            style: TextStyle(fontSize: kfont_mid),
                             maxLength: 15,
                             controller: _title,
                             textAlign: TextAlign.center,
@@ -100,69 +133,58 @@ class _Add_subState extends State<Add_sub> {
                               ),
                             ),
                           ),
-                          Container(
-                            width: 500,
-                            height: 100,
-                            child: Column(
-                              children: [
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Text('Initial present',
-                                        style: TextStyle(fontSize: 10)),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
-                                    Expanded(
-                                        child: TextField(
-                                      onChanged: (val) {
-                                        setState(() {
-                                          present_string = val;
-                                        });
-                                      },
-                                      keyboardType: TextInputType.number,
-                                      textAlign: TextAlign.center,
-                                      decoration: InputDecoration(
-                                        hintText: '0',
-                                        enabledBorder: UnderlineInputBorder(
-                                          borderSide:
-                                              BorderSide(color: Colors.grey),
-                                        ),
-                                        focusedBorder: UnderlineInputBorder(
-                                          borderSide:
-                                              BorderSide(color: Colors.black),
-                                        ),
-                                      ),
-                                    )),
-                                    Text('Initial Total',
-                                        style: TextStyle(fontSize: 10)),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
-                                    Expanded(
-                                        child: TextField(
-                                      onChanged: (val) {
-                                        setState(() {
-                                          total_string = val;
-                                        });
-                                      },
-                                      textAlign: TextAlign.center,
-                                      decoration: InputDecoration(
-                                        hintText: '0',
-                                        enabledBorder: UnderlineInputBorder(
-                                          borderSide:
-                                              BorderSide(color: Colors.grey),
-                                        ),
-                                        focusedBorder: UnderlineInputBorder(
-                                          borderSide:
-                                              BorderSide(color: Colors.black),
-                                        ),
-                                      ),
-                                    )),
-                                  ],
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Goal',
+                                    style: TextStyle(fontSize: kfont_mid),
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Container(
+                                    padding: EdgeInsets.all(8.0),
+                                    decoration: BoxDecoration(
+                                        color: title_color,
+                                        shape: BoxShape.circle),
+                                    child: Text(goal.toStringAsFixed(0),
+                                        style: TextStyle(
+                                          fontSize: kfont_mid,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                        )),
+                                  ),
+                                ],
+                              ),
+                              SliderTheme(
+                                data: SliderTheme.of(context).copyWith(
+                                  activeTrackColor: title_color,
+                                  inactiveTrackColor: total_color,
+                                  trackShape: RectangularSliderTrackShape(),
+                                  trackHeight: 4.0,
+                                  thumbColor: title_color,
+                                  thumbShape: RoundSliderThumbShape(
+                                      enabledThumbRadius: 12.0),
+                                  overlayColor: Colors.red.withAlpha(32),
+                                  overlayShape: RoundSliderOverlayShape(
+                                      overlayRadius: 28.0),
                                 ),
-                              ],
-                            ),
+                                child: Slider(
+                                  min: 0,
+                                  max: 100,
+                                  value: goal.toDouble(),
+                                  onChanged: (value) {
+                                    setState(() {
+                                      goal = value.ceil();
+                                    });
+                                  },
+                                ),
+                              ),
+                            ],
                           ),
                           Center(
                               child: GestureDetector(
@@ -178,7 +200,10 @@ class _Add_subState extends State<Add_sub> {
                             },
                             child: Container(
                                 padding: EdgeInsets.all(5),
-                                child: Text('Tap to Select Routine')),
+                                child: Text(
+                                  'Tap to Select Routine',
+                                  style: TextStyle(fontSize: kfont_mid),
+                                )),
                           )),
                           SizedBox(
                             height: 15,
@@ -198,10 +223,16 @@ class _Add_subState extends State<Add_sub> {
                                     child: Container(
                                         decoration: isSat
                                             ? card_decor.copyWith(
-                                                color: Colors.green)
+                                                color: title_color)
                                             : card_decor,
                                         padding: EdgeInsets.all(5),
-                                        child: Text('Sat')),
+                                        child: Text(
+                                          'Sat',
+                                          style: TextStyle(
+                                              color: isSat
+                                                  ? Colors.white
+                                                  : title_color),
+                                        )),
                                   ),
                                   InkWell(
                                     onTap: () {
@@ -212,10 +243,16 @@ class _Add_subState extends State<Add_sub> {
                                     child: Container(
                                         decoration: isSun
                                             ? card_decor.copyWith(
-                                                color: Colors.green)
+                                                color: title_color)
                                             : card_decor,
                                         padding: EdgeInsets.all(5),
-                                        child: Text('Sun')),
+                                        child: Text(
+                                          'Sun',
+                                          style: TextStyle(
+                                              color: isSun
+                                                  ? Colors.white
+                                                  : title_color),
+                                        )),
                                   ),
                                   InkWell(
                                     onTap: () {
@@ -226,10 +263,16 @@ class _Add_subState extends State<Add_sub> {
                                     child: Container(
                                         decoration: isMon
                                             ? card_decor.copyWith(
-                                                color: Colors.green)
+                                                color: title_color)
                                             : card_decor,
                                         padding: EdgeInsets.all(5),
-                                        child: Text('Mon')),
+                                        child: Text(
+                                          'Mon',
+                                          style: TextStyle(
+                                              color: isMon
+                                                  ? Colors.white
+                                                  : title_color),
+                                        )),
                                   ),
                                 ],
                               ),
@@ -249,24 +292,16 @@ class _Add_subState extends State<Add_sub> {
                                     child: Container(
                                         decoration: isTue
                                             ? card_decor.copyWith(
-                                                color: Colors.green)
+                                                color: title_color)
                                             : card_decor,
                                         padding: EdgeInsets.all(5),
-                                        child: Text('Tue')),
-                                  ),
-                                  InkWell(
-                                    onTap: () {
-                                      setState(() {
-                                        isThu = isThu ? false : true;
-                                      });
-                                    },
-                                    child: Container(
-                                        decoration: isThu
-                                            ? card_decor.copyWith(
-                                                color: Colors.green)
-                                            : card_decor,
-                                        padding: EdgeInsets.all(5),
-                                        child: Text('Thu')),
+                                        child: Text(
+                                          'Tue',
+                                          style: TextStyle(
+                                              color: isTue
+                                                  ? Colors.white
+                                                  : title_color),
+                                        )),
                                   ),
                                   InkWell(
                                     onTap: () {
@@ -277,10 +312,36 @@ class _Add_subState extends State<Add_sub> {
                                     child: Container(
                                         decoration: isWed
                                             ? card_decor.copyWith(
-                                                color: Colors.green)
+                                                color: title_color)
                                             : card_decor,
                                         padding: EdgeInsets.all(5),
-                                        child: Text('Wed')),
+                                        child: Text(
+                                          'Wed',
+                                          style: TextStyle(
+                                              color: isWed
+                                                  ? Colors.white
+                                                  : title_color),
+                                        )),
+                                  ),
+                                  InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        isThu = isThu ? false : true;
+                                      });
+                                    },
+                                    child: Container(
+                                        decoration: isThu
+                                            ? card_decor.copyWith(
+                                                color: title_color)
+                                            : card_decor,
+                                        padding: EdgeInsets.all(5),
+                                        child: Text(
+                                          'Thu',
+                                          style: TextStyle(
+                                              color: isThu
+                                                  ? Colors.white
+                                                  : title_color),
+                                        )),
                                   ),
                                   InkWell(
                                     onTap: () {
@@ -291,10 +352,16 @@ class _Add_subState extends State<Add_sub> {
                                     child: Container(
                                         decoration: isFri
                                             ? card_decor.copyWith(
-                                                color: Colors.green)
+                                                color: title_color)
                                             : card_decor,
                                         padding: EdgeInsets.all(5),
-                                        child: Text('Fri')),
+                                        child: Text(
+                                          'Fri',
+                                          style: TextStyle(
+                                              color: isFri
+                                                  ? Colors.white
+                                                  : title_color),
+                                        )),
                                   ),
                                 ],
                               )
@@ -303,45 +370,59 @@ class _Add_subState extends State<Add_sub> {
                           SizedBox(
                             height: 20,
                           ),
+                          add_btn == Colors.black12
+                              ? Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Center(
+                                      child: Text(
+                                    'Please enter the title',
+                                    style: TextStyle(color: Colors.red),
+                                  )),
+                                )
+                              : Text(''),
                           Center(
-                              child: InkWell(
-                                  onTap: () {
-                                    if (total_string == '') {
-                                      total_string = '0';
-                                    }
-                                    print(total_string);
-                                    if (present_string == '') {
-                                      present_string = '0';
-                                    }
+                              child: AbsorbPointer(
+                            absorbing: add_btn == Colors.black12 ? true : false,
+                            child: InkWell(
+                                onTap: () {
+                                  if (total_string == '') {
+                                    total_string = '0';
+                                  }
 
-                                    String title = _title_string;
-                                    int total = int.parse(total_string);
-                                    int present = int.parse(present_string);
-                                    int goal = 60;
-                                    String routine = final_routine
-                                        .toString()
-                                        .replaceAll('[', '')
-                                        .replaceAll(']', '');
-                                    print(total.runtimeType);
-                                    print(present.runtimeType);
-                                    print(routine.runtimeType);
-                                    print(title.runtimeType);
-                                    _insert(
-                                        title, present, total, routine, goal);
-                                  },
-                                  child: Container(
-                                      width: double.infinity,
-                                      padding: EdgeInsets.symmetric(
-                                        vertical: 10,
-                                      ),
-                                      decoration: card_decor.copyWith(
-                                          color: Colors.black12),
-                                      child: Center(
-                                          child: Text(
-                                        'Add Subject',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                      )))))
+                                  if (present_string == '') {
+                                    present_string = '0';
+                                  }
+
+                                  String title = _title_string;
+                                  int total = int.parse(total_string);
+                                  int present = int.parse(present_string);
+
+                                  String routine = final_routine
+                                      .toString()
+                                      .replaceAll('[', '')
+                                      .replaceAll(']', '');
+                                  print(total.runtimeType);
+                                  print(present.runtimeType);
+                                  print(routine.runtimeType);
+                                  print(title.runtimeType);
+                                  _insert(title, present, total, routine, goal);
+                                  _showDialog();
+                                },
+                                child: Container(
+                                    width: double.infinity,
+                                    padding: EdgeInsets.symmetric(
+                                      vertical: 10,
+                                    ),
+                                    decoration:
+                                        card_decor.copyWith(color: add_btn),
+                                    child: Center(
+                                        child: Text(
+                                      'Add Subject',
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold),
+                                    )))),
+                          ))
                         ],
                       )),
                 ],
@@ -349,6 +430,31 @@ class _Add_subState extends State<Add_sub> {
             ),
           ),
         ));
+  }
+
+  void _showDialog() {
+    // flutter defined function
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          elevation: 16.0,
+          title: new Text("New Subject added"),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("Return to homepage"),
+              onPressed: () {
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => MyHomePage()));
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void _insert(title, present, total, routine, goal) async {

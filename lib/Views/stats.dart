@@ -125,7 +125,7 @@ class _StatsState extends State<Stats> with SingleTickerProviderStateMixin {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   RoundCard(
-                      round: 120,
+                      round: size.width * 0.3,
                       title: 'Total Class',
                       animationController: _animationController,
                       total_classes: total_classes),
@@ -133,12 +133,12 @@ class _StatsState extends State<Stats> with SingleTickerProviderStateMixin {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       RoundCard(
-                          round: 80,
+                          round: size.width * 0.225,
                           title: 'Present',
                           animationController: _animationController,
                           total_classes: all_presents.length),
                       RoundCard(
-                          round: 80,
+                          round: size.width * 0.225,
                           title: 'Absent',
                           animationController: _animationController,
                           total_classes: all_absents.length),
@@ -196,7 +196,7 @@ class RoundCard extends StatelessWidget {
             children: [
               Text(
                 total_classes.toString(),
-                style: TextStyle(color: Colors.yellow, fontSize: 30),
+                style: TextStyle(color: Colors.yellow, fontSize: kfont_large),
               ),
               Text(
                 '$title',

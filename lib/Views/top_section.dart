@@ -7,8 +7,31 @@ import 'package:flutter/material.dart';
 import 'dart:math';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class TopSec extends StatelessWidget {
+class TopSec extends StatefulWidget {
+  @override
+  _TopSecState createState() => _TopSecState();
+}
+
+class _TopSecState extends State<TopSec> {
+  double _default_goal;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getInt();
+  }
+
+  getInt() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    //Return int
+    int intValue = await prefs.getInt('goal');
+    setState(() {
+      _default_goal = intValue != null ? intValue.toDouble() : 60;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -21,10 +44,13 @@ class TopSec extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(top: 20),
+                  padding: const EdgeInsets.only(top: 20, left: 20),
                   child: Text(
                     'Lazy Attandance Manager',
-                    style: TextStyle(color: Colors.white60, letterSpacing: 2.0),
+                    style: TextStyle(
+                        color: Colors.white60,
+                        letterSpacing: 2.0,
+                        fontSize: kfont_mid),
                   ),
                 ),
                 Row(
@@ -33,18 +59,18 @@ class TopSec extends StatelessWidget {
                     FaIcon(
                       FontAwesomeIcons.trophy,
                       color: total_color,
-                      size: 20,
+                      size: 25,
                     ),
                     Row(
                       children: [
                         Text(
                           'Goal : ',
-                          style: TextStyle(fontSize: 15, color: bg),
+                          style: TextStyle(fontSize: kfont_large, color: bg),
                         ),
                         Text(
-                          '60%',
+                          '${_default_goal.toString()}%',
                           style: TextStyle(
-                              fontSize: 20,
+                              fontSize: kfont_large,
                               fontWeight: FontWeight.bold,
                               color: bg),
                         )
@@ -75,7 +101,7 @@ class TopSec extends StatelessWidget {
                           child: FaIcon(
                             FontAwesomeIcons.slidersH,
                             color: title_color,
-                            size: 15,
+                            size: 20,
                           ),
                         ),
                       ),
@@ -90,7 +116,7 @@ class TopSec extends StatelessWidget {
                           child: FaIcon(
                             FontAwesomeIcons.chartBar,
                             color: title_color,
-                            size: 15,
+                            size: 20,
                           ),
                         ),
                       ),
@@ -107,7 +133,7 @@ class TopSec extends StatelessWidget {
                           child: FaIcon(
                             FontAwesomeIcons.calendarAlt,
                             color: title_color,
-                            size: 15,
+                            size: 20,
                           ),
                         ),
                       ),
@@ -117,7 +143,7 @@ class TopSec extends StatelessWidget {
                         child: FaIcon(
                           FontAwesomeIcons.infoCircle,
                           color: title_color,
-                          size: 15,
+                          size: 20,
                         ),
                       ),
                     ],
@@ -138,8 +164,8 @@ class TopSec extends StatelessWidget {
                         MaterialPageRoute(builder: (context) => Add_sub()));
                   },
                   child: Container(
-                    width: 75,
-                    height: 30,
+                    width: 80,
+                    height: 35,
                     decoration: button_decor.copyWith(
                         shape: BoxShape.rectangle,
                         borderRadius: BorderRadius.circular(15)),

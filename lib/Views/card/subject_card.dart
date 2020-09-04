@@ -74,7 +74,7 @@ class Subject_card extends StatelessWidget {
       margin: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
       padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
       decoration: card_decor,
-      height: size.height * 0.15,
+      // height: size.height * 0.15,
       width: size.width,
       child: Row(
         children: [
@@ -84,21 +84,28 @@ class Subject_card extends StatelessWidget {
               isToday == true
                   ? Text(
                       'Today!',
-                      style: TextStyle(color: Color(0xff7DA93E)),
+                      style: TextStyle(
+                          color: Color(0xff7DA93E), fontSize: kfont_mid),
                     )
                   : Text(''),
               Container(
-                height: 30,
-                width: 60,
+                height: 40,
+                width: 70,
                 decoration: card_decor.copyWith(
+                    gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: status
+                            ? [Colors.green, Color(0xff28C76F)]
+                            : [Color(0xffFFAA85), Color(0xffB3315F)]),
                     borderRadius: BorderRadius.circular(10)),
                 child: Center(
-                    child: Text(
-                  "${percentage.toStringAsFixed(2)}%",
-                  style: TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.bold,
-                      color: status ? percentage_color : Colors.red),
+                    child: FittedBox(
+                  child: Text("${percentage.toStringAsFixed(2)}%",
+                      style: TextStyle(
+                          fontSize: kfont_mid + 1,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white)),
                 )),
               ),
             ],
@@ -119,31 +126,13 @@ class Subject_card extends StatelessWidget {
                     child: Text(
                       _sub.name,
                       style: TextStyle(
-                          fontWeight: FontWeight.bold, color: title_color),
+                          fontWeight: FontWeight.bold,
+                          color: title_color,
+                          fontSize: kfont_mid),
                     ),
                   ),
                   SizedBox(
                     width: 5,
-                  ),
-                  InkWell(
-                    onTap: () {
-                      // _delete(_sub);
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => Edit(
-                                    sub: _sub,
-                                  )));
-                    },
-                    child: Container(
-                      padding: EdgeInsets.all(2),
-                      decoration: card_decor,
-                      child: FaIcon(
-                        FontAwesomeIcons.pencilAlt,
-                        color: edit_color,
-                        size: 8,
-                      ),
-                    ),
                   ),
                 ],
               ),
@@ -151,93 +140,121 @@ class Subject_card extends StatelessWidget {
                 children: [
                   Text(
                     '${_sub.present.toString()}/',
-                    style: TextStyle(fontSize: 15, color: present_color),
+                    style: TextStyle(fontSize: 20, color: present_color),
                   ),
                   Text(
                     _sub.total.toString(),
-                    style: TextStyle(fontSize: 20, color: total_color),
+                    style: TextStyle(fontSize: 24, color: total_color),
                   ),
                 ],
               ),
-              Row(
-                children: [
-                  FaIcon(
-                    FontAwesomeIcons.infoCircle,
-                    color: Color(0xff677a91),
-                    size: 10,
-                  ),
-                  SizedBox(
-                    width: 2,
-                  ),
-                  Text(remarks,
-                      style: TextStyle(fontSize: 10, color: title_color)),
-                ],
+              SizedBox(
+                height: 5,
+              ),
+              Container(
+                child: Row(
+                  children: [
+                    FaIcon(
+                      FontAwesomeIcons.infoCircle,
+                      color: Color(0xff677a91),
+                      size: 10,
+                    ),
+                    SizedBox(
+                      width: 2,
+                    ),
+                    Text(remarks,
+                        style: TextStyle(fontSize: 10, color: title_color)),
+                  ],
+                ),
               ),
             ],
           ),
           Spacer(),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Expanded(
-                child: Row(
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        _sub.present += 1;
-                        _sub.total += 1;
-                        _sub.histories.add(history(true));
+          Container(
+            height: 100,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                InkWell(
+                  onTap: () {
+                    // _delete(_sub);
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => Edit(
+                                  sub: _sub,
+                                )));
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(3),
+                    decoration: card_decor,
+                    child: FaIcon(
+                      FontAwesomeIcons.pencilAlt,
+                      color: edit_color,
+                      size: 12,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Row(
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          _sub.present += 1;
+                          _sub.total += 1;
+                          _sub.histories.add(history(true));
 
-                        _update(_sub.toMap_update());
-                      },
-                      child: Container(
-                        height: 30,
-                        width: 30,
-                        decoration: card_decor,
-                        child: Center(
-                          child: FaIcon(
-                            FontAwesomeIcons.thumbsUp,
-                            color: thumbsup_color,
-                            size: 15,
+                          _update(_sub.toMap_update());
+                        },
+                        child: Container(
+                          height: 30,
+                          width: 30,
+                          decoration: card_decor,
+                          child: Center(
+                            child: FaIcon(
+                              FontAwesomeIcons.thumbsUp,
+                              color: thumbsup_color,
+                              size: 15,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    InkWell(
-                      onTap: () {
-                        _sub.total += 1;
-                        _sub.histories.add(history(false));
+                      SizedBox(
+                        width: 10,
+                      ),
+                      InkWell(
+                        onTap: () {
+                          _sub.total += 1;
+                          _sub.histories.add(history(false));
 
-                        _update(_sub.toMap_update());
-                      },
-                      child: Container(
-                        height: 30,
-                        width: 30,
-                        decoration: card_decor,
-                        child: Center(
-                          child: FaIcon(
-                            FontAwesomeIcons.thumbsDown,
-                            size: 15,
+                          _update(_sub.toMap_update());
+                        },
+                        child: Container(
+                          height: 30,
+                          width: 30,
+                          decoration: card_decor,
+                          child: Center(
+                            child: FaIcon(
+                              FontAwesomeIcons.thumbsDown,
+                              size: 15,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              Container(
-                height: 10,
-                width: 70,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: last_5_classes,
+                Container(
+                  height: 10,
+                  width: 70,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: last_5_classes,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           )
         ],
       ),

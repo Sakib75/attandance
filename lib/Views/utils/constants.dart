@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+double kfont_mid = 16;
+double kfont_large = 22;
+double kfont_small = 14;
+
 BoxDecoration card_decor = BoxDecoration(boxShadow: [
   BoxShadow(
       offset: Offset(1, 1),

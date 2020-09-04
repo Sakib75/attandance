@@ -67,7 +67,7 @@ class _RoutineState extends State<Routine> {
                           style: TextStyle(
                               color: title_color,
                               fontWeight: FontWeight.bold,
-                              fontSize: 30),
+                              fontSize: kfont_large),
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -79,7 +79,8 @@ class _RoutineState extends State<Routine> {
                             Text(
                               '${routine[key].length.toString()}',
                               style: TextStyle(
-                                  fontSize: 14, fontWeight: FontWeight.bold),
+                                  fontSize: kfont_mid,
+                                  fontWeight: FontWeight.bold),
                             ),
                             Text(
                               ' Classes',
@@ -103,8 +104,19 @@ class _RoutineState extends State<Routine> {
                           child: Container(
                               width: size.height * 0.15,
                               padding: const EdgeInsets.all(8.0),
-                              decoration:
-                                  card_decor.copyWith(color: title_color),
+                              decoration: card_decor.copyWith(
+                                  color: title_color,
+                                  gradient: LinearGradient(
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                      stops: [
+                                        1.0,
+                                        1.0
+                                      ],
+                                      colors: [
+                                        title_color,
+                                        Colors.transparent
+                                      ])),
                               child: Center(
                                   child: Text(
                                 routine[key][index],

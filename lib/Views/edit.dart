@@ -1,4 +1,5 @@
 import 'package:attandace_app/Model/subject_model.dart';
+import 'package:attandace_app/Views/home.dart';
 import 'package:attandace_app/Views/utils/constants.dart';
 import 'package:attandace_app/helper/database_helper.dart';
 import 'package:attandace_app/helper/provider_subject.dart';
@@ -72,7 +73,7 @@ class _EditState extends State<Edit> {
     int _new_goal;
 
     List<String> routine = widget._sub.routine;
-    Size size = MediaQuery.of(context).size;
+
     _routine = [isSat, isSun, isMon, isTue, isWed, isThu, isFri];
     print(_routine);
     List<String> final_routine = [];
@@ -103,12 +104,73 @@ class _EditState extends State<Edit> {
       Provider.of<SubjectData>(context, listen: false).Get_from_database();
     }
 
+    void _showDialog(message) {
+      // flutter defined function
+      showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          // return object of type Dialog
+          return AlertDialog(
+            elevation: 16.0,
+            title: new Text(message),
+            actions: <Widget>[
+              // usually buttons at the bottom of the dialog
+              new FlatButton(
+                child: new Text("Return to homepage"),
+                onPressed: () {
+                  Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (context) => MyHomePage()));
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+
+    void _showDialog_delete(id) {
+      // flutter defined function
+      showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          // return object of type Dialog
+          return AlertDialog(
+            elevation: 16.0,
+            title: new Text("Do you really want to delete permanently?"),
+            actions: <Widget>[
+              // usually buttons at the bottom of the dialog
+              new FlatButton(
+                child: new Text(
+                  "No",
+                  style: TextStyle(color: Colors.red),
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              new FlatButton(
+                child: new Text("Yes"),
+                onPressed: () {
+                  _delete(id);
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => MyHomePage()));
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+
     void _update(row) async {
       final rowsAffected = await dbHelper.update(row);
       print('updated $rowsAffected row(s)');
       Provider.of<SubjectData>(context, listen: false).Get_from_database();
     }
 
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: Color(0xffdfe4eb),
@@ -118,12 +180,13 @@ class _EditState extends State<Edit> {
             child: Container(
               decoration: card_decor,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
                     'Update the details',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: kfont_large),
                   ),
                   Padding(
                       padding: EdgeInsets.symmetric(horizontal: 30),
@@ -132,7 +195,7 @@ class _EditState extends State<Edit> {
                         children: [
                           Text(
                             'New Title',
-                            style: TextStyle(fontSize: 10),
+                            style: TextStyle(fontSize: kfont_mid),
                           ),
                           TextField(
                             onChanged: (val) {
@@ -153,20 +216,20 @@ class _EditState extends State<Edit> {
                             ),
                           ),
                           Container(
-                            width: 500,
-                            height: 100,
+                            width: size.width,
+                            height: size.height * 0.15,
                             child: Column(
                               children: [
                                 SizedBox(
-                                  height: 30,
+                                  height: size.height * 0.03,
                                 ),
                                 Row(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    Text('New Present',
-                                        style: TextStyle(fontSize: 10)),
+                                    Text('Present',
+                                        style: TextStyle(fontSize: kfont_mid)),
                                     SizedBox(
-                                      width: 10,
+                                      width: size.height * 0.03,
                                     ),
                                     Expanded(
                                         child: TextField(
@@ -190,8 +253,8 @@ class _EditState extends State<Edit> {
                                         ),
                                       ),
                                     )),
-                                    Text('Initial Total',
-                                        style: TextStyle(fontSize: 10)),
+                                    Text('Total',
+                                        style: TextStyle(fontSize: kfont_mid)),
                                     SizedBox(
                                       width: 10,
                                     ),
@@ -220,18 +283,55 @@ class _EditState extends State<Edit> {
                               ],
                             ),
                           ),
-                          Container(
-                            child: Text(_goal.toStringAsFixed(0)),
-                          ),
-                          Slider(
-                            min: 0,
-                            max: 100,
-                            value: _goal.toDouble(),
-                            onChanged: (value) {
-                              setState(() {
-                                _goal = value.ceil();
-                              });
-                            },
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text('New Goal'),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Container(
+                                    padding: EdgeInsets.all(8.0),
+                                    decoration: BoxDecoration(
+                                        color: title_color,
+                                        shape: BoxShape.circle),
+                                    child: Text(_goal.toStringAsFixed(0),
+                                        style: TextStyle(
+                                          fontSize: kfont_mid,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                        )),
+                                  ),
+                                ],
+                              ),
+                              SliderTheme(
+                                data: SliderTheme.of(context).copyWith(
+                                  activeTrackColor: title_color,
+                                  inactiveTrackColor: total_color,
+                                  trackShape: RectangularSliderTrackShape(),
+                                  trackHeight: 4.0,
+                                  thumbColor: title_color,
+                                  thumbShape: RoundSliderThumbShape(
+                                      enabledThumbRadius: 12.0),
+                                  overlayColor: Colors.red.withAlpha(32),
+                                  overlayShape: RoundSliderOverlayShape(
+                                      overlayRadius: 28.0),
+                                ),
+                                child: Slider(
+                                  min: 0,
+                                  max: 100,
+                                  value: _goal.toDouble(),
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _goal = value.ceil();
+                                    });
+                                  },
+                                ),
+                              ),
+                            ],
                           ),
                           Center(
                               child: GestureDetector(
@@ -267,10 +367,16 @@ class _EditState extends State<Edit> {
                                     child: Container(
                                         decoration: isSat
                                             ? card_decor.copyWith(
-                                                color: Colors.green)
+                                                color: title_color)
                                             : card_decor,
                                         padding: EdgeInsets.all(5),
-                                        child: Text('Sat')),
+                                        child: Text(
+                                          'Sat',
+                                          style: TextStyle(
+                                              color: isSat
+                                                  ? Colors.white
+                                                  : title_color),
+                                        )),
                                   ),
                                   InkWell(
                                     onTap: () {
@@ -281,10 +387,16 @@ class _EditState extends State<Edit> {
                                     child: Container(
                                         decoration: isSun
                                             ? card_decor.copyWith(
-                                                color: Colors.green)
+                                                color: title_color)
                                             : card_decor,
                                         padding: EdgeInsets.all(5),
-                                        child: Text('Sun')),
+                                        child: Text(
+                                          'Sun',
+                                          style: TextStyle(
+                                              color: isSun
+                                                  ? Colors.white
+                                                  : title_color),
+                                        )),
                                   ),
                                   InkWell(
                                     onTap: () {
@@ -295,10 +407,16 @@ class _EditState extends State<Edit> {
                                     child: Container(
                                         decoration: isMon
                                             ? card_decor.copyWith(
-                                                color: Colors.green)
+                                                color: title_color)
                                             : card_decor,
                                         padding: EdgeInsets.all(5),
-                                        child: Text('Mon')),
+                                        child: Text(
+                                          'Mon',
+                                          style: TextStyle(
+                                              color: isMon
+                                                  ? Colors.white
+                                                  : title_color),
+                                        )),
                                   ),
                                 ],
                               ),
@@ -318,24 +436,16 @@ class _EditState extends State<Edit> {
                                     child: Container(
                                         decoration: isTue
                                             ? card_decor.copyWith(
-                                                color: Colors.green)
+                                                color: title_color)
                                             : card_decor,
                                         padding: EdgeInsets.all(5),
-                                        child: Text('Tue')),
-                                  ),
-                                  InkWell(
-                                    onTap: () {
-                                      setState(() {
-                                        isThu = isThu ? false : true;
-                                      });
-                                    },
-                                    child: Container(
-                                        decoration: isThu
-                                            ? card_decor.copyWith(
-                                                color: Colors.green)
-                                            : card_decor,
-                                        padding: EdgeInsets.all(5),
-                                        child: Text('Thu')),
+                                        child: Text(
+                                          'Tue',
+                                          style: TextStyle(
+                                              color: isTue
+                                                  ? Colors.white
+                                                  : title_color),
+                                        )),
                                   ),
                                   InkWell(
                                     onTap: () {
@@ -346,10 +456,36 @@ class _EditState extends State<Edit> {
                                     child: Container(
                                         decoration: isWed
                                             ? card_decor.copyWith(
-                                                color: Colors.green)
+                                                color: title_color)
                                             : card_decor,
                                         padding: EdgeInsets.all(5),
-                                        child: Text('Wed')),
+                                        child: Text(
+                                          'Wed',
+                                          style: TextStyle(
+                                              color: isWed
+                                                  ? Colors.white
+                                                  : title_color),
+                                        )),
+                                  ),
+                                  InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        isThu = isThu ? false : true;
+                                      });
+                                    },
+                                    child: Container(
+                                        decoration: isThu
+                                            ? card_decor.copyWith(
+                                                color: title_color)
+                                            : card_decor,
+                                        padding: EdgeInsets.all(5),
+                                        child: Text(
+                                          'Thu',
+                                          style: TextStyle(
+                                              color: isThu
+                                                  ? Colors.white
+                                                  : title_color),
+                                        )),
                                   ),
                                   InkWell(
                                     onTap: () {
@@ -360,10 +496,16 @@ class _EditState extends State<Edit> {
                                     child: Container(
                                         decoration: isFri
                                             ? card_decor.copyWith(
-                                                color: Colors.green)
+                                                color: title_color)
                                             : card_decor,
                                         padding: EdgeInsets.all(5),
-                                        child: Text('Fri')),
+                                        child: Text(
+                                          'Fri',
+                                          style: TextStyle(
+                                              color: isFri
+                                                  ? Colors.white
+                                                  : title_color),
+                                        )),
                                   ),
                                 ],
                               )
@@ -409,6 +551,7 @@ class _EditState extends State<Edit> {
                                     print(final_routine);
 
                                     _update(widget._sub.toMap_update());
+                                    _showDialog('Subject updated successfully');
                                   },
                                   child: Container(
                                       width: double.infinity,
@@ -416,17 +559,21 @@ class _EditState extends State<Edit> {
                                         vertical: 10,
                                       ),
                                       decoration: card_decor.copyWith(
-                                          color: Colors.black12),
+                                          color: title_color),
                                       child: Center(
                                           child: Text(
                                         'Update Subject',
                                         style: TextStyle(
-                                            fontWeight: FontWeight.bold),
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white),
                                       ))))),
+                          SizedBox(
+                            height: 10,
+                          ),
                           Center(
                               child: InkWell(
                                   onTap: () {
-                                    _delete(widget._sub.id);
+                                    _showDialog_delete(widget._sub.id);
                                   },
                                   child: Container(
                                       width: double.infinity,
