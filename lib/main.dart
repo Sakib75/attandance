@@ -1,6 +1,7 @@
 import 'package:attandace_app/Views/percentage_bar.dart';
 import 'package:attandace_app/Views/settings/settings.dart';
 import 'package:attandace_app/Views/stats.dart';
+import 'package:attandace_app/Views/welcome.dart';
 import 'package:attandace_app/helper/provider_subject.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -24,7 +25,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        home: MyHomePage(title: 'Flutter Demo Home Page'),
+        home: Welcome(),
         // home: ChartsDemo(),
       ),
     );

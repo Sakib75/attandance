@@ -119,6 +119,14 @@ class _StatsState extends State<Stats> with SingleTickerProviderStateMixin {
             //     return diff;
             //   });
 
+            int present = 0;
+            int total = 0;
+
+            subject_data.forEach((element) {
+              present = present + element['present'];
+              total = total + element['total'];
+            });
+
             Size size = MediaQuery.of(context).size;
             return Center(
               child: Column(
@@ -128,7 +136,7 @@ class _StatsState extends State<Stats> with SingleTickerProviderStateMixin {
                       round: size.width * 0.3,
                       title: 'Total Class',
                       animationController: _animationController,
-                      total_classes: total_classes),
+                      total_classes: total),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -136,12 +144,12 @@ class _StatsState extends State<Stats> with SingleTickerProviderStateMixin {
                           round: size.width * 0.225,
                           title: 'Present',
                           animationController: _animationController,
-                          total_classes: all_presents.length),
+                          total_classes: present),
                       RoundCard(
                           round: size.width * 0.225,
                           title: 'Absent',
                           animationController: _animationController,
-                          total_classes: all_absents.length),
+                          total_classes: (total - present)),
                     ],
                   ),
 

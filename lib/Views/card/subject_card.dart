@@ -101,11 +101,21 @@ class Subject_card extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10)),
                 child: Center(
                     child: FittedBox(
-                  child: Text("${percentage.toStringAsFixed(2)}%",
-                      style: TextStyle(
-                          fontSize: kfont_mid + 1,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white)),
+                  child: Container(
+                    height: 35,
+                    width: 65,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      color: Colors.white,
+                    ),
+                    child: Center(
+                      child: Text("${percentage.toStringAsFixed(2)}%",
+                          style: TextStyle(
+                              fontSize: kfont_mid,
+                              fontWeight: FontWeight.bold,
+                              color: title_color)),
+                    ),
+                  ),
                 )),
               ),
             ],

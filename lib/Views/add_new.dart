@@ -17,7 +17,7 @@ class _Add_subState extends State<Add_sub> {
   final dbHelper = DatabaseHelper.instance;
 
   double rating = 0;
-  int goal = 0;
+  int goal = 60;
   bool isSun = false;
   bool isMon = false;
   bool isTue = false;
@@ -48,7 +48,7 @@ class _Add_subState extends State<Add_sub> {
     //Return int
     int intValue = await prefs.getInt('goal');
     setState(() {
-      goal = intValue;
+      goal = intValue != null ? intValue : 60;
     });
   }
 
@@ -93,7 +93,7 @@ class _Add_subState extends State<Add_sub> {
         backgroundColor: Color(0xffdfe4eb),
         body: Builder(
           builder: (context) => Padding(
-            padding: EdgeInsets.all(30),
+            padding: EdgeInsets.only(top: 50, bottom: 20, left: 20, right: 20),
             child: Container(
               decoration: card_decor,
               child: Column(
@@ -132,6 +132,61 @@ class _Add_subState extends State<Add_sub> {
                                 borderSide: BorderSide(color: Colors.black),
                               ),
                             ),
+                          ),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text('Present',
+                                  style: TextStyle(fontSize: kfont_mid)),
+                              SizedBox(
+                                width: size.height * 0.03,
+                              ),
+                              Expanded(
+                                  child: TextField(
+                                onChanged: (val) {
+                                  setState(() {
+                                    present_string = val;
+                                  });
+                                },
+                                keyboardType: TextInputType.number,
+                                textAlign: TextAlign.center,
+                                decoration: InputDecoration(
+                                  hintText: '0',
+                                  enabledBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.grey),
+                                  ),
+                                  focusedBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.black),
+                                  ),
+                                ),
+                              )),
+                              Text('Total',
+                                  style: TextStyle(fontSize: kfont_mid)),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Expanded(
+                                  child: TextField(
+                                onChanged: (val) {
+                                  setState(() {
+                                    total_string = val;
+                                  });
+                                },
+                                textAlign: TextAlign.center,
+                                decoration: InputDecoration(
+                                  hintText: '0',
+                                  enabledBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.grey),
+                                  ),
+                                  focusedBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.black),
+                                  ),
+                                ),
+                              )),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10,
                           ),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -208,164 +263,185 @@ class _Add_subState extends State<Add_sub> {
                           SizedBox(
                             height: 15,
                           ),
-                          Column(
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
+                          Container(
+                            height: size.height * 0.1,
+                            width: size.width * 0.8,
+                            child: FittedBox(
+                              child: Column(
                                 children: [
-                                  InkWell(
-                                    onTap: () {
-                                      setState(() {
-                                        isSat = isSat ? false : true;
-                                      });
-                                    },
-                                    child: Container(
-                                        decoration: isSat
-                                            ? card_decor.copyWith(
-                                                color: title_color)
-                                            : card_decor,
-                                        padding: EdgeInsets.all(5),
-                                        child: Text(
-                                          'Sat',
-                                          style: TextStyle(
-                                              color: isSat
-                                                  ? Colors.white
-                                                  : title_color),
-                                        )),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      InkWell(
+                                        onTap: () {
+                                          setState(() {
+                                            isSat = isSat ? false : true;
+                                          });
+                                        },
+                                        child: Container(
+                                            decoration: isSat
+                                                ? card_decor.copyWith(
+                                                    color: title_color)
+                                                : card_decor,
+                                            padding: EdgeInsets.all(5),
+                                            child: Text(
+                                              'Sat',
+                                              style: TextStyle(
+                                                  color: isSat
+                                                      ? Colors.white
+                                                      : title_color),
+                                            )),
+                                      ),
+                                      SizedBox(
+                                        width: 15,
+                                      ),
+                                      InkWell(
+                                        onTap: () {
+                                          setState(() {
+                                            isSun = isSun ? false : true;
+                                          });
+                                        },
+                                        child: Container(
+                                            decoration: isSun
+                                                ? card_decor.copyWith(
+                                                    color: title_color)
+                                                : card_decor,
+                                            padding: EdgeInsets.all(5),
+                                            child: Text(
+                                              'Sun',
+                                              style: TextStyle(
+                                                  color: isSun
+                                                      ? Colors.white
+                                                      : title_color),
+                                            )),
+                                      ),
+                                      SizedBox(
+                                        width: 15,
+                                      ),
+                                      InkWell(
+                                        onTap: () {
+                                          setState(() {
+                                            isMon = isMon ? false : true;
+                                          });
+                                        },
+                                        child: Container(
+                                            decoration: isMon
+                                                ? card_decor.copyWith(
+                                                    color: title_color)
+                                                : card_decor,
+                                            padding: EdgeInsets.all(5),
+                                            child: Text(
+                                              'Mon',
+                                              style: TextStyle(
+                                                  color: isMon
+                                                      ? Colors.white
+                                                      : title_color),
+                                            )),
+                                      ),
+                                    ],
                                   ),
-                                  InkWell(
-                                    onTap: () {
-                                      setState(() {
-                                        isSun = isSun ? false : true;
-                                      });
-                                    },
-                                    child: Container(
-                                        decoration: isSun
-                                            ? card_decor.copyWith(
-                                                color: title_color)
-                                            : card_decor,
-                                        padding: EdgeInsets.all(5),
-                                        child: Text(
-                                          'Sun',
-                                          style: TextStyle(
-                                              color: isSun
-                                                  ? Colors.white
-                                                  : title_color),
-                                        )),
+                                  SizedBox(
+                                    height: 5,
                                   ),
-                                  InkWell(
-                                    onTap: () {
-                                      setState(() {
-                                        isMon = isMon ? false : true;
-                                      });
-                                    },
-                                    child: Container(
-                                        decoration: isMon
-                                            ? card_decor.copyWith(
-                                                color: title_color)
-                                            : card_decor,
-                                        padding: EdgeInsets.all(5),
-                                        child: Text(
-                                          'Mon',
-                                          style: TextStyle(
-                                              color: isMon
-                                                  ? Colors.white
-                                                  : title_color),
-                                        )),
-                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      InkWell(
+                                        onTap: () {
+                                          setState(() {
+                                            isTue = isTue ? false : true;
+                                          });
+                                        },
+                                        child: Container(
+                                            decoration: isTue
+                                                ? card_decor.copyWith(
+                                                    color: title_color)
+                                                : card_decor,
+                                            padding: EdgeInsets.all(5),
+                                            child: Text(
+                                              'Tue',
+                                              style: TextStyle(
+                                                  color: isTue
+                                                      ? Colors.white
+                                                      : title_color),
+                                            )),
+                                      ),
+                                      SizedBox(
+                                        width: 15,
+                                      ),
+                                      InkWell(
+                                        onTap: () {
+                                          setState(() {
+                                            isWed = isWed ? false : true;
+                                          });
+                                        },
+                                        child: Container(
+                                            decoration: isWed
+                                                ? card_decor.copyWith(
+                                                    color: title_color)
+                                                : card_decor,
+                                            padding: EdgeInsets.all(5),
+                                            child: Text(
+                                              'Wed',
+                                              style: TextStyle(
+                                                  color: isWed
+                                                      ? Colors.white
+                                                      : title_color),
+                                            )),
+                                      ),
+                                      SizedBox(
+                                        width: 15,
+                                      ),
+                                      InkWell(
+                                        onTap: () {
+                                          setState(() {
+                                            isThu = isThu ? false : true;
+                                          });
+                                        },
+                                        child: Container(
+                                            decoration: isThu
+                                                ? card_decor.copyWith(
+                                                    color: title_color)
+                                                : card_decor,
+                                            padding: EdgeInsets.all(5),
+                                            child: Text(
+                                              'Thu',
+                                              style: TextStyle(
+                                                  color: isThu
+                                                      ? Colors.white
+                                                      : title_color),
+                                            )),
+                                      ),
+                                      SizedBox(
+                                        width: 15,
+                                      ),
+                                      InkWell(
+                                        onTap: () {
+                                          setState(() {
+                                            isFri = isFri ? false : true;
+                                          });
+                                        },
+                                        child: Container(
+                                            decoration: isFri
+                                                ? card_decor.copyWith(
+                                                    color: title_color)
+                                                : card_decor,
+                                            padding: EdgeInsets.all(5),
+                                            child: Text(
+                                              'Fri',
+                                              style: TextStyle(
+                                                  color: isFri
+                                                      ? Colors.white
+                                                      : title_color),
+                                            )),
+                                      ),
+                                    ],
+                                  )
                                 ],
                               ),
-                              SizedBox(
-                                height: 5,
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  InkWell(
-                                    onTap: () {
-                                      setState(() {
-                                        isTue = isTue ? false : true;
-                                      });
-                                    },
-                                    child: Container(
-                                        decoration: isTue
-                                            ? card_decor.copyWith(
-                                                color: title_color)
-                                            : card_decor,
-                                        padding: EdgeInsets.all(5),
-                                        child: Text(
-                                          'Tue',
-                                          style: TextStyle(
-                                              color: isTue
-                                                  ? Colors.white
-                                                  : title_color),
-                                        )),
-                                  ),
-                                  InkWell(
-                                    onTap: () {
-                                      setState(() {
-                                        isWed = isWed ? false : true;
-                                      });
-                                    },
-                                    child: Container(
-                                        decoration: isWed
-                                            ? card_decor.copyWith(
-                                                color: title_color)
-                                            : card_decor,
-                                        padding: EdgeInsets.all(5),
-                                        child: Text(
-                                          'Wed',
-                                          style: TextStyle(
-                                              color: isWed
-                                                  ? Colors.white
-                                                  : title_color),
-                                        )),
-                                  ),
-                                  InkWell(
-                                    onTap: () {
-                                      setState(() {
-                                        isThu = isThu ? false : true;
-                                      });
-                                    },
-                                    child: Container(
-                                        decoration: isThu
-                                            ? card_decor.copyWith(
-                                                color: title_color)
-                                            : card_decor,
-                                        padding: EdgeInsets.all(5),
-                                        child: Text(
-                                          'Thu',
-                                          style: TextStyle(
-                                              color: isThu
-                                                  ? Colors.white
-                                                  : title_color),
-                                        )),
-                                  ),
-                                  InkWell(
-                                    onTap: () {
-                                      setState(() {
-                                        isFri = isFri ? false : true;
-                                      });
-                                    },
-                                    child: Container(
-                                        decoration: isFri
-                                            ? card_decor.copyWith(
-                                                color: title_color)
-                                            : card_decor,
-                                        padding: EdgeInsets.all(5),
-                                        child: Text(
-                                          'Fri',
-                                          style: TextStyle(
-                                              color: isFri
-                                                  ? Colors.white
-                                                  : title_color),
-                                        )),
-                                  ),
-                                ],
-                              )
-                            ],
+                            ),
                           ),
                           SizedBox(
                             height: 20,

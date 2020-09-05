@@ -1,5 +1,6 @@
 import 'package:attandace_app/Model/subject_model.dart';
 import 'package:attandace_app/Views/add_new.dart';
+import 'package:attandace_app/Views/settings/settings.dart';
 import 'package:attandace_app/Views/top_section.dart';
 import 'package:attandace_app/Views/utils/constants.dart';
 
@@ -28,6 +29,7 @@ class _MyHomePageState extends State<MyHomePage> {
   ScrollController _scrollController;
   double _val = 0;
   bool isOpen = true;
+  bool isFirst;
 
   @override
   void initState() {
@@ -41,6 +43,18 @@ class _MyHomePageState extends State<MyHomePage> {
         _val = _scrollController.offset;
       });
     });
+
+    getInt() async {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      //Return int
+      int intValue = await prefs.getInt('goal');
+      if (intValue == null) {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => Settings()));
+      }
+    }
+
+    getInt();
   }
 
   @override
